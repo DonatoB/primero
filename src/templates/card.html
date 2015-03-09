@@ -1,17 +1,17 @@
-<div class="card">
-    <div>
-        {{name}}
+<div id="pr-card-{{id}}" class="pr-card{{#if classes}} {{classes}}{{/if}} pr-guild-{{guild}}">
+    <div class="pr-card-name">
+        <strong>{{name}}</strong>
     </div>
-    <div>
+    <div class="pr-card-damage">
         Dmg {{damage}}
     </div>
-    <div>
+    <div class="pr-card-speed">
         Speed {{speed}}
     </div>
-    <div>
+    <div class="pr-card-regen">
         Regen {{regen}}
     </div>
-    <div>
-        Health {{health}}
+    <div class="pr-card-health">
+        Health {{health}} / {{max_health}}
     </div>
 </div>
