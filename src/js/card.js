@@ -8,11 +8,5 @@ define([], function() {
         });
     };
 
-    /*
-    _.extend(Card.prototype, {
-        test: 'hi'
-    });
-    */
-
     return Card;
-})
+});

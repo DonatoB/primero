@@ -1,19 +1,12 @@
 define([
     'handlebars',
-    'text!templates/card.html',
     'text!templates/battle-page.html',
     'jquery'
-
-], function(Handlebars, cardHtml, battlePageHtml, $) {
+], function(Handlebars, battlePageHtml, $) {
 
     var TURN_DELAY = 1200;
 
-    var makeCard = Handlebars.compile(cardHtml);
     var makePage = Handlebars.compile(battlePageHtml);
-
-    Handlebars.registerHelper('createCard', function() {
-        return makeCard(this);
-    });
 
 
     function dealDamage(from, to, logs) {
@@ -77,7 +70,6 @@ define([
 
         var html = makePage(battleObject);
         $('#battleground').html(html);
-
     }
 
     return function(team1, team2) {

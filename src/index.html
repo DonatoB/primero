@@ -16,6 +16,7 @@
                 'underscore' : '../bower_components/underscore/underscore',
                 'jquery' : '../bower_components/jquery/dist/jquery',
                 'handlebars' : '../bower_components/handlebars/handlebars',
+                'backbone' : '../bower_components/backbone/backbone',
 
                 // Plugins
                 'text' : '../bower_components/text/text'
@@ -31,8 +32,14 @@
             border: 3px solid black;
             margin: 10px;
             padding: 5px;
+
+            width: 140px;
+            height: 180px;
         }
 
+        .pr-guild-mortals {
+            border-color : cadetblue;
+        }
         .pr-guild-heroes {
             border-color : mediumpurple;
         }
@@ -44,6 +51,6 @@
 <body>
 
     <h2>Battle Battle</h2>
-    <div id="battleground"></div>
+    <div id="battleground" class="container-fluid"></div>
 </body>
 </html>

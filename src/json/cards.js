@@ -36,7 +36,16 @@ define([], function() {
             regen : 20,
 
             guild : 'ancients'
+        },
+        {
+            name: 'Leila',
+            damage : 12,
+            speed : 70,
+            health : 40,
+            regen : 30,
+
+            guild : 'mortals'
         }
-        // champions, demigods, heroes,
+        // champions, demigods, heroes
     ];
 });
