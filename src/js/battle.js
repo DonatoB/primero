@@ -8,7 +8,6 @@ define([
 
     var makePage = Handlebars.compile(battlePageHtml);
 
-
     function dealDamage(from, to, logs) {
         logs.push(from.name + ' deals ' + from.damage + ' to ' +to.name);
         to.health -= from.damage;

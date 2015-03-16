@@ -1,52 +1,49 @@
 define([
     'backbone',
     'jquery',
-    'handlebars',
     'underscore',
     'js/battle',
     'js/plan',
     'js/card',
-    'text!templates/card.html',
-    'json/cards'
-], function(Backbone, $, Handlebars, _, battle, plan, Card, cardHtml, cards ) {
+    'json/cards',
+    'js/handlebars.helpers',
+], function(Backbone, $, _, battle, plan, Card, cards) {
 
-    var makeCard = Handlebars.compile(cardHtml);
-    Handlebars.registerHelper('createCard', function() {
-        return makeCard(this);
-    });
-
-    function makeTeam(arr) {
-        return _.map(arr, _.clone);
+    function makeTeam(str) {
+        return _.map(str.split(','), function(val) {
+            var idx = parseInt(val) || 0;
+            // the cards object is shared
+            return _.clone(App.cards[idx]);
+        });
     }
 
     var Workspace = Backbone.Router.extend({
         routes: {
             '' : 'plan',
-            plan : 'plan',
-            battle : 'battle'
+            'plan' : 'plan',
+            'battle/*team1/*team2' : 'battle'
         },
 
         plan : function() {
-            plan(cards);
+            plan(App.cards);
         },
-        battle : function() {
+
+        battle : function(t1, t2) {
+            // teams come in as a comma delimited string of ints
+            var team1 = makeTeam(t1);
+            var team2 = makeTeam(t2);
+
             battle(team1, team2);
         }
     });
 
-    var App = new Workspace;
 
+    // Instantiate App, creating routes
+    window.App = new Workspace;
 
-    cards = _.map(cards, Card);
-
-    var team1 = makeTeam([cards[0], cards[1], cards[2]]);
-    var team2 = makeTeam([cards[1], cards[3], cards[2]]);
-
-
-    window.pr = {};
-    window.pr.cards = cards;
+    // Convert json into Card objects
+    App.cards = _.map(cards, Card);
 
     // Enable url routing
     Backbone.history.start();
-
 });

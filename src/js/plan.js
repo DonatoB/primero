@@ -1,10 +1,9 @@
 define([
     'handlebars',
-    'text!templates/card.html',
     'text!templates/plan-page.html',
     'jquery'
-], function(Handlebars, cardHtml, planPageHtml, $) {
-    var  planPage = Handlebars.compile(planPageHtml);
+], function(Handlebars, planPageHtml, $) {
+    var planPage = Handlebars.compile(planPageHtml);
     var TEAM_SIZE = 2;
 
     var Store = {
@@ -43,6 +42,11 @@ define([
         $('#battleground').html($html);
     }
 
+    function genParamString(team) {
+        var ids = _.map(team, _.property('id'));
+        return ids.join(',');
+    }
+
     return function(cards) {
         Store.team1 = [];
         Store.team2 = [];
@@ -55,6 +59,11 @@ define([
             var fromRow = $this.closest('.row').attr('row');
 
             sendEvent('card-clicked', id, fromRow);
+        });
+
+        $('#battleground').on('click', '#button-fight', function() {
+            var str = genParamString(Store.team1) + '/' + genParamString(Store.team2);
+            window.App.navigate('battle/'+str, {trigger: true});
         });
 
         render();
