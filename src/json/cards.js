@@ -45,6 +45,15 @@ define([], function() {
             regen : 30,
 
             guild : 'mortals'
+        },
+        {
+            name: 'Caicos',
+            damage: 32,
+            speed: 37,
+            health: 60,
+            regen: 60,
+
+            guild: 'travelers'
         }
         // champions, demigods, heroes
     ];
