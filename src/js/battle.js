@@ -5,11 +5,12 @@ define([
 ], function(Handlebars, battlePageHtml, $) {
 
     var TURN_DELAY = 1200;
+    var timeout;
 
     var makePage = Handlebars.compile(battlePageHtml);
 
     function dealDamage(from, to, logs) {
-        logs.push(from.name + ' deals ' + from.damage + ' to ' +to.name);
+        logs.push(from.name + ' deals ' + from.damage + 'damage to ' +to.name);
         to.health -= from.damage;
         $('#pr-card-' + to.id).css('color', 'red');
         $('#pr-card-' + from.id).css('color', 'blue');
@@ -53,7 +54,7 @@ define([
 
 
         if (team1.length > 0 && team2.length > 0) {
-            _.delay(_.partial(battle, team1, team2, logs), TURN_DELAY);
+            timeout = _.delay(_.partial(battle, team1, team2, logs), TURN_DELAY);
         }
 
         renderPage(team1, team2, logs);
@@ -71,7 +72,17 @@ define([
         $('#battleground').html(html);
     }
 
+    function cleanup() {
+        clearTimeout(timeout);
+
+    }
+
     return function(team1, team2) {
+        App.on('route', function(route) {
+            if (route !== 'battle') {
+                cleanup();
+            }
+        });
 
         // Since we modify the array to show alive members
         team1 = _.clone(team1);
@@ -80,7 +91,6 @@ define([
         renderPage(team1, team2);
 
         _.delay(_.partial(battle, team1, team2), TURN_DELAY);
-
     }
 
 });

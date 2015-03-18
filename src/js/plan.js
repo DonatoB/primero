@@ -6,6 +6,7 @@ define([
     var planPage = Handlebars.compile(planPageHtml);
     var TEAM_SIZE = 2;
 
+    // State : allcards, chosencards
     var Store = {
         unchosen: [],
         team1: [],
@@ -19,7 +20,6 @@ define([
         Store[to].push(card);
     }
 
-    // State : allcards, chosencards
     function sendEvent(x, id, row) {
         if (row === 'unchosen') {
             if (Store.team1.length < TEAM_SIZE) {
@@ -47,6 +47,10 @@ define([
         return ids.join(',');
     }
 
+    function cleanup() {
+        $('#battleground').off();
+    }
+
     return function(cards) {
         Store.team1 = [];
         Store.team2 = [];
@@ -62,6 +66,7 @@ define([
         });
 
         $('#battleground').on('click', '#button-fight', function() {
+            cleanup();
             var str = genParamString(Store.team1) + '/' + genParamString(Store.team2);
             window.App.navigate('battle/'+str, {trigger: true});
         });

@@ -25,7 +25,8 @@ define([
         },
 
         plan : function() {
-            plan(App.cards);
+            var cards = _.clone(App.cards);
+            plan(cards);
         },
 
         battle : function(t1, t2) {

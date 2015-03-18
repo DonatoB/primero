@@ -31,16 +31,16 @@ define([], function() {
         {
             name: 'Chronos the God of Time',
             damage : 30,
-            speed : 50,
-            health : 70,
+            speed : 70,
+            health : 30,
             regen : 20,
 
             guild : 'ancients'
         },
         {
             name: 'Leila',
-            damage : 12,
-            speed : 70,
+            damage : 15,
+            speed : 60,
             health : 40,
             regen : 30,
 
