@@ -64,5 +64,8 @@ define([
     // Set off routing (this will be run after authenticating user)
     Session.getAuth(function() {
         Backbone.history.start();
+    }, function(e) {
+        console.log(e);
+        $('body').html('Connection to the server failed');
     });
 });

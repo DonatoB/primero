@@ -4,7 +4,7 @@ define([
     'jquery'
 ], function(Handlebars, battlePageHtml, $) {
 
-    var TURN_DELAY = 1200;
+    var TURN_DELAY = 2000;
     var timeout;
 
     var makePage = Handlebars.compile(battlePageHtml);

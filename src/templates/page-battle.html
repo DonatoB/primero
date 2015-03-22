@@ -1,20 +1,20 @@
 <h3>Battle!</h3>
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-md-4 col-sm-4">
         {{#each team1}}
         <div class="row">
             {{{createCard}}}
         </div>
         {{/each}}
     </div>
-    <div class="col-lg-4">
+    <div class="col-md-4 col-sm-4">
         {{#each team2}}
         <div class="row">
             {{{createCard}}}
         </div>
         {{/each}}
     </div>
-    <div class="col-lg-4">
+    <div class="col-md-4 col-sm-4">
         <div id="battle-log">
             {{#each logs}}
                 <div>{{this}}</div>

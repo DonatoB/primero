@@ -43,7 +43,7 @@ define([
         var loggedIn = Session.get('auth');
         var txt = (loggedIn ? 'You are logged in' : 'Not logged in');
 
-        $html.prepend(txt);
+        $html.first().prepend(txt);
         $('#battleground').html($html);
     }
 

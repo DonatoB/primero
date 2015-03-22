@@ -29,6 +29,7 @@ define([
                 success: function () {}
             });
         },
+
         logout: function() {
             // Do a DELETE to /session and clear the clientside data
             var that = this;
@@ -44,11 +45,13 @@ define([
                 }
             });
         },
-        getAuth: function(callback) {
+
+        getAuth: function(callback, errorCallback) {
             // getAuth is wrapped around our router
             // before we start any routers let us see if the user is valid
             this.fetch({
-                success: callback
+                success: callback,
+                error : errorCallback
             });
         }
     });
