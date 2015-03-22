@@ -31,6 +31,11 @@ define([
         },
 
         logout: function() {
+            // Multiple logouts don't do anything
+            if (this.isNew()) {
+                return;
+            }
+
             // Do a DELETE to /session and clear the clientside data
             var that = this;
             this.destroy({
@@ -55,6 +60,7 @@ define([
             });
         }
     });
+
     return new SessionModel();
 
 });

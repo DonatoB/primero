@@ -7,9 +7,8 @@ define([
     'js/pages/login',
     'js/pages/plan',
     'js/card',
-    'json/cards',
     'js/handlebars.helpers',
-], function(Session, Backbone, $, _, battle, login, plan, Card, cards) {
+], function(Session, Backbone, $, _, battle, login, plan, Card) {
 
     // Pass to remote server
     $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
@@ -19,11 +18,11 @@ define([
     });
 
 
-    function makeTeam(str) {
+    function makeTeam(str, cards) {
         return _.map(str.split(','), function(val) {
             var idx = parseInt(val) || 0;
             // the cards object is shared
-            return _.clone(App.cards[idx]);
+            return _.clone(cards[idx]);
         });
     }
 
@@ -45,7 +44,7 @@ define([
         },
 
         plan : function() {
-            var cards = _.clone(App.cards);
+            var cards = _.clone(Session.get('cards'));
             plan(cards);
         },
 
@@ -55,8 +54,9 @@ define([
 
         battle : function(t1, t2) {
             // teams come in as a comma delimited string of ints
-            var team1 = makeTeam(t1);
-            var team2 = makeTeam(t2);
+            var cards = _.clone(Session.get('cards'));
+            var team1 = makeTeam(t1, cards);
+            var team2 = makeTeam(t2, cards);
 
             battle(team1, team2);
         }
@@ -68,7 +68,7 @@ define([
     window.App.session = Session;
 
     // Convert json into Card objects
-    App.cards = _.map(cards, Card);
+    //App.cards = _.map(cards, Card);
 
 
     // Set off routing (this will be run after authenticating user)
@@ -79,7 +79,13 @@ define([
             window.App.navigate('', {trigger: true, replace:false});
         });
 
-        Backbone.history.start();
+        if (!Session.get('auth')) {
+            window.App.navigate('', {trigger: true, replace:false});
+        }
+
+        Backbone.history.start({
+            root: '/~donatoborrello/donatob/primero/src/'
+        });
     }, function(e) {
         console.log(e);
         $('body').html('Connection to the server failed');

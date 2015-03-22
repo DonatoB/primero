@@ -8,15 +8,14 @@ define([
     var TEAM_SIZE = 2;
 
     // State : allcards, chosencards
-    var Store = {
-        unchosen: [],
-        team1: [],
-        team2: []
-    };
+    var Store = {};
 
     function moveCard(from, to, id) {
         var card = _.findWhere(Store[from], {id : id});
 
+        if (!card) {
+            debugger;
+        }
         Store[from] = _.without(Store[from], card);
         Store[to].push(card);
     }
@@ -40,10 +39,6 @@ define([
 
     function render() {
         var $html = $(planPage(Store));
-        var loggedIn = Session.get('auth');
-        var txt = (loggedIn ? 'You are logged in' : 'Not logged in');
-
-        $html.first().prepend(txt);
         $('#battleground').html($html);
     }
 
@@ -53,7 +48,7 @@ define([
     }
 
     function cleanup() {
-        $('#battleground').off();
+        $('#battleground').off('click');
     }
 
     return function(cards) {
@@ -61,6 +56,7 @@ define([
         Store.team2 = [];
         Store.unchosen = cards;
 
+        cleanup();
         $('#battleground').on('click', '.pr-card', function() {
             var $this = $(this);
 
