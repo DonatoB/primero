@@ -4,20 +4,21 @@ define([
     'jquery'
 ], function(Handlebars, battlePageHtml, $) {
 
-    var TURN_DELAY = 2000;
+    var TURN_DELAY = 1000;
+    var roundNum = 0;
     var timeout;
 
     var makePage = Handlebars.compile(battlePageHtml);
 
     function dealDamage(from, to, logs) {
-        logs.push(from.name + ' deals ' + from.damage + 'damage to ' +to.name);
+        logs.push(from.name + ' deals ' + from.damage + ' damage to ' +to.name);
         to.health -= from.damage;
         $('#pr-card-' + to.id).css('color', 'red');
         $('#pr-card-' + from.id).css('color', 'blue');
     }
 
     function round(cardLeft, cardRight, logs) {
-        logs.push('Round begins '+ cardLeft.name+ ' versus '+ cardRight.name);
+        logs.push('[ Round ' + (roundNum++) +' ]');
 
         if (cardLeft.speed >= cardRight.speed) {
             dealDamage(cardLeft, cardRight, logs);
