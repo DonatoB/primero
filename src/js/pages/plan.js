@@ -1,8 +1,9 @@
 define([
+    'js/models/session',
     'handlebars',
-    'text!templates/plan-page.html',
+    'text!templates/page-planning.html',
     'jquery'
-], function(Handlebars, planPageHtml, $) {
+], function(Session, Handlebars, planPageHtml, $) {
     var planPage = Handlebars.compile(planPageHtml);
     var TEAM_SIZE = 2;
 
@@ -11,7 +12,7 @@ define([
         unchosen: [],
         team1: [],
         team2: []
-    }
+    };
 
     function moveCard(from, to, id) {
         var card = _.findWhere(Store[from], {id : id});
@@ -39,6 +40,10 @@ define([
 
     function render() {
         var $html = $(planPage(Store));
+        var loggedIn = Session.get('auth');
+        var txt = (loggedIn ? 'You are logged in' : 'Not logged in');
+
+        $html.prepend(txt);
         $('#battleground').html($html);
     }
 

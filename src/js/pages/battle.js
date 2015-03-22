@@ -1,6 +1,6 @@
 define([
     'handlebars',
-    'text!templates/battle-page.html',
+    'text!templates/page-battle.html',
     'jquery'
 ], function(Handlebars, battlePageHtml, $) {
 

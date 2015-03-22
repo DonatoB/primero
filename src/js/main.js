@@ -1,13 +1,24 @@
 define([
+    'js/models/session',
     'backbone',
     'jquery',
     'underscore',
-    'js/battle',
-    'js/plan',
+    'js/pages/battle',
+    'js/pages/login',
+    'js/pages/plan',
     'js/card',
     'json/cards',
     'js/handlebars.helpers',
-], function(Backbone, $, _, battle, plan, Card, cards) {
+], function(Session, Backbone, $, _, battle, login, plan, Card, cards) {
+
+    window.sess = Session;
+    // Pass to remote server
+    $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+        // Your server goes below
+        options.url = 'http://localhost:3000' + options.url;
+        //options.url = 'http://cross-domain.nodejitsu.com' + options.url;
+    });
+
 
     function makeTeam(str) {
         return _.map(str.split(','), function(val) {
@@ -21,12 +32,17 @@ define([
         routes: {
             '' : 'plan',
             'plan' : 'plan',
+            'login' : 'login',
             'battle/*team1/*team2' : 'battle'
         },
 
         plan : function() {
             var cards = _.clone(App.cards);
             plan(cards);
+        },
+
+        login : function() {
+            login();
         },
 
         battle : function(t1, t2) {
@@ -45,6 +61,8 @@ define([
     // Convert json into Card objects
     App.cards = _.map(cards, Card);
 
-    // Enable url routing
-    Backbone.history.start();
+    // Set off routing (this will be run after authenticating user)
+    Session.getAuth(function() {
+        Backbone.history.start();
+    });
 });

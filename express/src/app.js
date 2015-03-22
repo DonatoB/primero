@@ -4,6 +4,7 @@ var MongoStore = require('connect-mongo')(session);
 var path    = require('path');
 var logger  = require('morgan');
 var passport = require('passport');
+var csrf = require('./csrf');
 
 var passportConfig = require('./passport-config');
 
@@ -17,41 +18,55 @@ var app = express();
 
 //CORS middleware
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // Added other domains you want the server to give access to
+    // WARNING - Be careful with what origins you give access to
+    var allowedHost = [
+        'http://localhost'
+    ];
 
-    next();
+    if(allowedHost.indexOf(req.headers.origin) !== -1) {
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header('Access-Control-Allow-Origin', req.headers.origin)
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+        next();
+    } else {
+        res.send({auth: false});
+    }
 };
 app.use(allowCrossDomain);
 
 
+
 app.use(logger('dev'));
+
 
 // Needed to parse the post values into json
 var bodyParser = require('body-parser');
-
-// this will let us get the data from a POST
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(bodyParser.json());
 
 app.use(session({
     secret: 'keyboard cat',
-    store: new MongoStore({url : mongoUrl}),
     saveUninitialized: true,
     resave :true
+    //store: new MongoStore({url : mongoUrl}),
 }));
 
 
-// Initialize passport stuff
-passportConfig(app);
-
+app.use(csrf.check);
 // Make our db accessible to our router
 app.use(function(req,res,next){
     req.db = db;
     next();
 });
+
+
+// Initialize passport stuff
+//passportConfig(app);
+
+
 
 // Add the routes/middleware
 var routes = require('./routes');

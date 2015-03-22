@@ -1,10 +1,14 @@
 var express = require('express');
+
+// count the views
+var parseurl = require('parseurl');
 var _ = require('underscore');
 var router = express.Router();
 
-var TABLE = 'features';
-var URL = '/features';
+/*
 
+ var TABLE = 'features';
+ var URL = '/features';
 function update(db, feature) {
     var collection = db.get(TABLE);
 
@@ -32,18 +36,91 @@ router.get(URL, function(req, res) {
     });
 });
 
-router.get(URL + '/:build_number', function(req, res) {
-    var db = req.db;
+*/
 
-    var buildNumber = req.params.build_number;
+router.get('/session', function(req, res){
+    // This checks the current users auth
+    // It runs before Backbones router is started
+    // we should return a csrf token for Backbone to use
+    if(typeof req.session.username !== 'undefined'){
+        res.send({auth: true, id: req.session.id, username: req.session.username, _csrf: req.session._csrf});
+    } else {
+        res.send({auth: false, _csrf: req.session._csrf});
+    }
+});
+router.get('/session/:id', function(req, res) {
+    var views = req.session.views;
+    if (!views) {
+        views = req.session.views = {};
+    }
+
+    // get the url pathname
+    var pathname = parseurl(req).pathname;
+
+    // count the views
+    views[pathname] = (views[pathname] || 0) + 1
+
+    res.send({view:views});
+});
+
+router.post('/session', function(req, res){
+    // Login
+    // Here you would pull down your user credentials and match them up
+    // to the request
+    req.session.username = req.body.username;
+    res.send({auth: true, id: req.session.id, username: req.session.username});
+});
+
+
+router.delete('/session/:abc', function(req, res, next){
+    console.log("DELETE session");
+    console.log("Logout: ", req.session.username);
+
+    // Logout by clearing the session
+    req.session.regenerate(function(err){
+        // Generate a new csrf token so the user can login again
+        // This is pretty hacky, connect.csrf isn't built for rest
+        // I will probably release a restful csrf module
+        // csrf.generate(req, res, function () {
+        res.send({auth: false, _csrf: req.session._csrf});
+        // });
+    });
+});
+
+
+/*
+router.get('/features/:build_number', function(req, res) {
+
+    var views = req.session.views;
+    if (!views) {
+        views = req.session.views = {};
+    }
+
+    // get the url pathname
+    var pathname = parseurl(req).pathname;
+
+    // count the views
+    views[pathname] = (views[pathname] || 0) + 1
+
+    //console.log('after', req.session.views);
+
+    //req.session.save();
+    res.json({
+        ex : 'hi',
+        sess : views
+    });
+
+    var db = req.db;
 
     var collection = db.get(TABLE);
     collection.find({build : buildNumber},{},function(e,docs){
         res.json(docs);
     });
 });
+*/
 
 
+/*
 // Update
 router.put(URL + '/:id', function(req, res) {
     var db = req.db;
@@ -60,5 +137,5 @@ router.put(URL + '/:id', function(req, res) {
     res.json({time: t});
 });
 
-
+*/
 module.exports = router;
