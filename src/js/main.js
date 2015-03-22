@@ -30,10 +30,19 @@ define([
 
     var Workspace = Backbone.Router.extend({
         routes: {
-            '' : 'plan',
+            '' : 'index',
             'plan' : 'plan',
             'login' : 'login',
             'battle/*team1/*team2' : 'battle'
+        },
+
+        index : function() {
+            var auth = Session.get('auth');
+            if (auth) {
+                this.navigate('plan', {trigger: true, replace : false});
+            } else {
+                this.navigate('login', {trigger: true, replace : false});
+            }
         },
 
         plan : function() {
