@@ -1,8 +1,9 @@
 define([
+    'js/models/session',
     'handlebars',
     'text!templates/page-login.html',
     'jquery'
-], function(Handlebars, html, $) {
+], function(Session, Handlebars, html, $) {
 
     var template = Handlebars.compile(html);
 
@@ -20,9 +21,7 @@ define([
                 password : pass
             };
 
-            $.post('http://127.0.0.1:3000/login', data, function() {
-                console.log(arguments);
-            });
+            Session.login(data);
         });
 
         $('#battleground').html($html);

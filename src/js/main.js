@@ -11,7 +11,6 @@ define([
     'js/handlebars.helpers',
 ], function(Session, Backbone, $, _, battle, login, plan, Card, cards) {
 
-    window.sess = Session;
     // Pass to remote server
     $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
         // Your server goes below
@@ -66,12 +65,20 @@ define([
 
     // Instantiate App, creating routes
     window.App = new Workspace;
+    window.App.session = Session;
 
     // Convert json into Card objects
     App.cards = _.map(cards, Card);
 
+
     // Set off routing (this will be run after authenticating user)
     Session.getAuth(function() {
+
+        // Any further changes would be a log out
+        Session.on('change:auth', function() {
+            window.App.navigate('', {trigger: true, replace:false});
+        });
+
         Backbone.history.start();
     }, function(e) {
         console.log(e);

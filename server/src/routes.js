@@ -5,6 +5,7 @@ var parseurl = require('parseurl');
 var _ = require('underscore');
 var router = express.Router();
 
+var csrf = require('./csrf');
 /*
 
  var TABLE = 'features';
@@ -63,12 +64,19 @@ router.get('/session/:id', function(req, res) {
     res.send({view:views});
 });
 
-router.post('/session', function(req, res){
+router.post('/session', function(req, res) {
     // Login
     // Here you would pull down your user credentials and match them up
     // to the request
+    if (!req.body.username) {
+        next();
+    }
+
     req.session.username = req.body.username;
     res.send({auth: true, id: req.session.id, username: req.session.username});
+    /*
+    res.send({val: true});
+     */
 });
 
 
@@ -81,9 +89,9 @@ router.delete('/session/:abc', function(req, res, next){
         // Generate a new csrf token so the user can login again
         // This is pretty hacky, connect.csrf isn't built for rest
         // I will probably release a restful csrf module
-        // csrf.generate(req, res, function () {
-        res.send({auth: false, _csrf: req.session._csrf});
-        // });
+         csrf.generate(req, res, function () {
+            res.send({auth: false, _csrf: req.session._csrf});
+         });
     });
 });
 

@@ -23,14 +23,12 @@ var checkToken = function(req, res, next){
     next();
 };
 
-/*
 var newToken = function(req, res, next) {
     var token = req.session._csrf || (req.session._csrf = generateToken(24));
     next();
 };
-*/
 
 module.exports = {
-    check: checkToken,
-    //generate: newToken
+    checkToken: checkToken,
+    generate: newToken
 };

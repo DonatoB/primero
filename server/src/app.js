@@ -55,7 +55,7 @@ app.use(session({
 }));
 
 
-app.use(csrf.check);
+app.use(csrf.checkToken);
 // Make our db accessible to our router
 app.use(function(req,res,next){
     req.db = db;
@@ -88,6 +88,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
+        console.log('Dev Error --!');
         console.log(err.status, err.message);
         res.send('error', {
             message: err.message,
